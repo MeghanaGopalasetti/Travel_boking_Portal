@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body text-center">
+            <h2 class="card-title mb-4">💳 Payment Page</h2>
+
+            <div class="text-left">
+                <p><strong>Booking Type:</strong> {{ booking_type }}</p>
+                <p><strong>Details:</strong> {{ booking_details }}</p>
+                <p><strong>Price:</strong> {{ price }}</p>
+            </div>
+
+            <form id="razorpay-form">
+                <button type="button" class="btn btn-success btn-lg w-100" id="pay-button">
+                    Pay with Razorpay
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Razorpay Payment Integration -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById('pay-button').addEventListener('click', function() {
+        var amountInRupees = "{{ price }}";  // Get price from Django
+        var amountInPaise = parseFloat(amountInRupees) * 100;  // Convert to paise (Razorpay expects amount in paise)
+
+        var options = {
+            "key": "rzp_test_ZkmFIsQ6R9GcAS",  // Replace with your actual Razorpay key
+            "amount": amountInPaise,  // Razorpay expects amount in paise
+            "currency": "INR",
+            "name": "Travel Booking Portal",
+            "description": "Booking Payment",
+            "handler": function (response) {
+                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+                window.location.href = "{% url 'payment_success' %}";
+            },
+            "prefill": {
+                "email": "{{ request.user.email }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
+</script>
+
+{% endblock %}

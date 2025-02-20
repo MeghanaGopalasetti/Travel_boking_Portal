@@ -1,0 +1,39 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Search Flights</h2>
+    <form method="GET">
+        <input type="text" name="destination" placeholder="Enter Destination" class="form-control mb-3" value="{{ search_query }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    {% if flights %}
+        <h3 class="mt-4">Available Flights</h3>
+        <div class="row">
+            {% for flight in flights %}
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ flight.airline }}</h5>
+                            <p class="card-text"><strong>From:</strong> {{ flight.from }}</p>
+                            <p class="card-text"><strong>To:</strong> {{ flight.to }}</p>
+                            <p class="card-text"><strong>Price:</strong> {{ flight.price }}</p>
+
+                            <!-- Redirects to Payment Page with Booking Details -->
+                            <form action="{% url 'payment' %}" method="GET">
+                                <input type="hidden" name="booking_type" value="Flight">
+                                <input type="hidden" name="booking_details" value="{{ flight.airline }} - {{ flight.from }} to {{ flight.to }}">
+                                <input type="hidden" name="price" value="{{ flight.price }}">
+                                <button type="submit" class="btn btn-success">Book Now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif search_query %}
+        <p class="mt-3 text-danger">No flights found for "{{ search_query }}"</p>
+    {% endif %}
+</div>
+{% endblock %}

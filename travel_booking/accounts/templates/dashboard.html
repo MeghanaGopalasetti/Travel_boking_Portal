@@ -1,0 +1,67 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Travel Booking Portal</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .navbar-brand {
+            margin: auto;
+            font-size: 16 px;
+            font-weight: bold;
+        }
+        .logout-btn {
+            position: absolute;
+            right: 20px;
+        }
+        .btn-block {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Travel Booking</a>
+        <div class="logout-btn">
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4 text-center">
+        {% if messages %}
+            <div class="mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h2>Welcome, <strong>{{ user.username }}</strong>!</h2>
+        <p>Explore the best travel deals.</p>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <a href="{% url 'flights' %}" class="btn btn-primary btn-block">✈️ Search Flights</a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'hotels' %}" class="btn btn-secondary btn-block">🏨 Find Hotels</a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'packages' %}" class="btn btn-success btn-block">🎫 View Packages</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        {% block content %}
+        <p class="text-center">Select a travel option from the menu.</p>
+        {% endblock %}
+    </div>
+
+</body>
+</html>

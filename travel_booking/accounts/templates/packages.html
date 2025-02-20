@@ -1,0 +1,36 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Travel Packages</h2>
+    <p>Explore the best travel packages for your next vacation!</p>
+
+    <div class="row">
+        {% for package in packages %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{% static package.image %}" class="card-img-top" alt="{{ package.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ package.name }}</h5>
+                        <p class="card-text"><strong>Destination:</strong> {{ package.destination }}</p>
+                        <p class="card-text"><strong>Price:</strong> {{ package.price }}</p>
+
+                        <!-- Redirects to Payment Page with Booking Details -->
+                        <form action="{% url 'payment' %}" method="GET">
+                            <input type="hidden" name="booking_type" value="Package">
+                            <input type="hidden" name="booking_details" value="{{ package.name }} - {{ package.destination }}">
+                            <input type="hidden" name="price" value="{{ package.price }}">
+                            <button type="submit" class="btn btn-success">Book Now</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not packages %}
+        <p class="mt-3 text-danger">No packages available at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}
